@@ -118,13 +118,7 @@ body {
 
 .logo {
     font-size: 28px;
-    animation: pulse 2s infinite;
     display: inline-block;
-}
-
-@keyframes pulse {
-    0%, 100% { transform: scale(1); }
-    50% { transform: scale(1.1); }
 }
 
 .brand-text {
@@ -385,12 +379,6 @@ body {
     font-weight: 700;
     padding: 2px 6px;
     border-radius: 4px;
-    animation: badgePulse 1.5s infinite;
-}
-
-@keyframes badgePulse {
-    0%, 100% { transform: scale(1); }
-    50% { transform: scale(1.1); }
 }
 
 .menu-footer {
@@ -473,12 +461,6 @@ body {
     padding: 20px;
     margin-bottom: 20px;
     box-shadow: 0 4px 20px var(--accent-glow);
-    animation: gradientShift 5s ease infinite;
-}
-
-@keyframes gradientShift {
-    0%, 100% { background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary)); }
-    50% { background: linear-gradient(135deg, var(--accent-secondary), var(--accent-primary)); }
 }
 
 .greeting-text {
@@ -489,13 +471,6 @@ body {
 
 .greeting-emoji {
     font-size: 48px;
-    animation: wave 2s ease infinite;
-}
-
-@keyframes wave {
-    0%, 100% { transform: rotate(0deg); }
-    25% { transform: rotate(-10deg); }
-    75% { transform: rotate(10deg); }
 }
 
 .greeting-title {
@@ -617,12 +592,6 @@ body {
     right: 0;
     bottom: 0;
     background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);
-    animation: shimmer 2s infinite;
-}
-
-@keyframes shimmer {
-    0% { transform: translateX(-100%); }
-    100% { transform: translateX(100%); }
 }
 
 .level-hint {
@@ -665,7 +634,7 @@ body {
 }
 
 .btn-add:hover {
-    transform: scale(1.1) rotate(90deg);
+    transform: scale(1.1);
     background: var(--accent-secondary);
 }
 
@@ -697,18 +666,12 @@ body {
     transition: width var(--transition-normal);
 }
 
-.task-card:hover::before {
-    width: 100%;
-    opacity: 0.05;
-}
-
 .task-card.type-study::before { background: #3b82f6; }
 .task-card.type-sport::before { background: #ef4444; }
 .task-card.type-creative::before { background: #ec4899; }
 .task-card.type-other::before { background: #6b7280; }
 
 .task-card:hover {
-    transform: translateX(4px);
     box-shadow: var(--shadow-md);
 }
 
@@ -879,7 +842,6 @@ body {
     margin-bottom: 20px;
     position: relative;
     overflow: hidden;
-    animation: gradientShift 8s ease infinite;
 }
 
 .daily-quote::before {
@@ -1322,13 +1284,6 @@ body {
 .battle-task-item.selected .battle-task-checkbox {
     background: var(--success);
     border-color: var(--success);
-    animation: checkPop 0.3s ease;
-}
-
-@keyframes checkPop {
-    0% { transform: scale(0.8); }
-    50% { transform: scale(1.2); }
-    100% { transform: scale(1); }
 }
 
 .battle-task-title {
@@ -1435,13 +1390,8 @@ body {
 
 /* Анимация критического удара */
 .battle-log-entry.crit-hit {
-    animation: critShake 0.5s ease;
-}
-
-@keyframes critShake {
-    0%, 100% { transform: translateX(0); }
-    25% { transform: translateX(-5px) scale(1.05); }
-    75% { transform: translateX(5px) scale(1.05); }
+    color: var(--xp-color);
+    font-weight: 700;
 }
 
 /* Результат боя */
@@ -1456,12 +1406,6 @@ body {
 .result-icon {
     font-size: 64px;
     margin-bottom: 16px;
-    animation: bounce 1s infinite;
-}
-
-@keyframes bounce {
-    0%, 100% { transform: translateY(0); }
-    50% { transform: translateY(-10px); }
 }
 
 .battle-result h2 {
@@ -2496,7 +2440,6 @@ body {
 
 .modal-overlay.active {
     display: flex;
-    animation: fadeIn 0.2s ease;
 }
 
 .modal {
@@ -2678,6 +2621,245 @@ body {
     background: var(--accent-secondary);
     transform: translateY(-2px);
 }
+
+/* Кнопка добавления привычки */
+.btn-add-habit {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: var(--accent-primary);
+    border: none;
+    color: white;
+    font-size: 24px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: var(--transition-fast);
+    box-shadow: var(--shadow-glow);
+    flex-shrink: 0;
+}
+
+.btn-add-habit:hover {
+    transform: scale(1.1);
+    background: var(--accent-secondary);
+}
+
+/* Habits стили */
+.habits-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    padding: 16px;
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-md);
+}
+
+.habits-header h3 {
+    font-size: 1rem;
+    margin: 0;
+}
+
+.habits-group {
+    margin-bottom: 20px;
+}
+
+.habits-group-title {
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--text-secondary);
+    margin-bottom: 12px;
+    padding-left: 8px;
+}
+
+.habit-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-md);
+    padding: 16px;
+    margin-bottom: 12px;
+    transition: var(--transition-fast);
+}
+
+.habit-card:hover {
+    border-color: var(--accent-primary);
+}
+
+.habit-card.completed {
+    opacity: 0.6;
+    border-color: var(--success);
+}
+
+.habit-card.completed .habit-complete-btn {
+    background: var(--success);
+    color: white;
+}
+
+.habit-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 12px;
+}
+
+.habit-info h4 {
+    font-size: 1rem;
+    margin-bottom: 4px;
+}
+
+.habit-info p {
+    font-size: 0.8rem;
+    color: var(--text-secondary);
+}
+
+.habit-complete-btn {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: var(--bg-primary);
+    border: 2px solid var(--border-color);
+    cursor: pointer;
+    font-size: 18px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: var(--transition-fast);
+    flex-shrink: 0;
+}
+
+.habit-complete-btn:hover {
+    border-color: var(--success);
+}
+
+.habit-complete-btn.done {
+    background: var(--success);
+    border-color: var(--success);
+    color: white;
+}
+
+.habit-meta {
+    display: flex;
+    gap: 16px;
+    font-size: 0.8rem;
+    color: var(--text-secondary);
+    margin-bottom: 12px;
+}
+
+.habit-streak {
+    color: var(--streak-color);
+    font-weight: 600;
+}
+
+.habit-xp {
+    color: var(--xp-color);
+}
+
+.habit-streak-bar {
+    height: 6px;
+    background: var(--bg-primary);
+    border-radius: 3px;
+    overflow: hidden;
+}
+
+.habit-streak-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--streak-color), #f97316);
+    border-radius: 3px;
+    transition: width var(--transition-normal);
+}
+
+.habits-stats-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+    margin-bottom: 20px;
+}
+
+.habits-stat-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-md);
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+}
+
+.habits-stat-icon {
+    font-size: 24px;
+}
+
+.habits-stat-value {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--accent-primary);
+}
+
+.habits-stat-label {
+    font-size: 0.7rem;
+    color: var(--text-secondary);
+}
+
+/* Модалка привычки */
+#habit-form .form-group {
+    margin-bottom: 16px;
+}
+
+#habit-form label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 600;
+}
+
+#habit-form input,
+#habit-form select,
+#habit-form textarea {
+    width: 100%;
+    padding: 12px;
+    background: var(--bg-primary);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-sm);
+    color: var(--text-primary);
+    font-size: 0.9rem;
+}
+
+#habit-form textarea {
+    min-height: 80px;
+    resize: vertical;
+}
+
+/* Модалка использования предмета */
+.use-item-info {
+    text-align: center;
+    padding: 20px;
+}
+
+.use-item-icon {
+    font-size: 64px;
+    margin-bottom: 12px;
+}
+
+.use-item-name {
+    font-size: 1.25rem;
+    font-weight: 700;
+    margin-bottom: 8px;
+}
+
+.use-item-desc {
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+}
+
+.use-item-actions {
+    display: flex;
+    gap: 12px;
+    margin-top: 20px;
+}
+
+/* Модалка добавления привычки */
 
 /* Модалка выполнения */
 .complete-modal {

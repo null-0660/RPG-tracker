@@ -292,7 +292,7 @@ const Statistics = {
     render() {
         const container = document.getElementById('statistics-list');
         if (!container) return;
-        
+
         // Проверка инициализации
         if (!this.stats) {
             this.loadStatistics();
@@ -300,6 +300,7 @@ const Statistics = {
 
         const battleStats = this.getBattleStats();
         const efficiency = this.getTaskEfficiency();
+        const dailyStats = this.getDailyStatsForChart();
 
         container.innerHTML = `
             <div class="stats-section">
@@ -324,6 +325,7 @@ const Statistics = {
                 </div>
             </div>
 
+            ${Object.keys(efficiency).length > 0 ? `
             <div class="stats-section">
                 <h2>📈 Эффективность по типам</h2>
                 <div class="efficiency-list">
@@ -338,11 +340,13 @@ const Statistics = {
                     `).join('')}
                 </div>
             </div>
+            ` : ''}
 
+            ${dailyStats.length > 0 ? `
             <div class="stats-section">
                 <h2>📅 Активность (7 дней)</h2>
                 <div class="weekly-activity">
-                    ${this.getDailyStatsForChart().map(day => `
+                    ${dailyStats.map(day => `
                         <div class="day-activity">
                             <span class="day-name">${day.date}</span>
                             <span class="day-tasks">${day.tasks} зад.</span>
@@ -351,6 +355,7 @@ const Statistics = {
                     `).join('')}
                 </div>
             </div>
+            ` : ''}
         `;
     },
 

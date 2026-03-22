@@ -16,6 +16,7 @@ const Leaderboard = {
         
         this.loadLeaderboard();
         this.render();
+        this.bindEvents();
     },
 
     /**
@@ -73,35 +74,24 @@ const Leaderboard = {
         const profile = Storage.getProfile();
         if (!profile) return;
 
-        const currentPlayer = this.players.find(p => p.isCurrentPlayer);
+        // Сначала удаляем старого текущего игрока если есть
+        this.players = this.players.filter(p => !p.isCurrentPlayer);
+
+        // Добавляем актуальные данные текущего игрока
+        this.players.unshift({
+            id: 'current_player',
+            name: profile.name,
+            avatar: profile.equippedSkin || profile.avatar,
+            level: profile.level,
+            xp: profile.totalXp,
+            tasksCompleted: profile.tasksCompleted,
+            battlesWon: profile.battlesWon || 0,
+            streak: profile.streak,
+            isCurrentPlayer: true
+        });
         
-        if (!currentPlayer) {
-            // Добавляем текущего игрока
-            this.players.unshift({
-                id: 'current_player',
-                name: profile.name,
-                avatar: profile.equippedSkin || profile.avatar,
-                level: profile.level,
-                xp: profile.totalXp,
-                tasksCompleted: profile.tasksCompleted,
-                battlesWon: profile.battlesWon || 0,
-                streak: profile.streak,
-                isCurrentPlayer: true
-            });
-            this.sortPlayers();
-            this.saveLeaderboard();
-        } else {
-            // Обновляем данные текущего игрока
-            currentPlayer.name = profile.name;
-            currentPlayer.avatar = profile.equippedSkin || profile.avatar;
-            currentPlayer.level = profile.level;
-            currentPlayer.xp = profile.totalXp;
-            currentPlayer.tasksCompleted = profile.tasksCompleted;
-            currentPlayer.battlesWon = profile.battlesWon || 0;
-            currentPlayer.streak = profile.streak;
-            this.sortPlayers();
-            this.saveLeaderboard();
-        }
+        this.sortPlayers();
+        this.saveLeaderboard();
     },
 
     /**
@@ -224,8 +214,10 @@ const Leaderboard = {
      * Обновить таблицу лидеров
      */
     refresh() {
+        this.loadLeaderboard();
         this.ensureCurrentPlayerExists();
         this.render();
+        this.bindEvents();
     },
 
     /**
@@ -233,7 +225,8 @@ const Leaderboard = {
      */
     bindEvents() {
         const refreshBtn = document.getElementById('refresh-leaderboard-btn');
-        if (refreshBtn) {
+        if (refreshBtn && !refreshBtn.dataset.bound) {
+            refreshBtn.dataset.bound = 'true';
             refreshBtn.addEventListener('click', () => {
                 this.refresh();
                 App.showNotification('Таблица лидеров обновлена!', 'success');

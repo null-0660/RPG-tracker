@@ -721,6 +721,9 @@ const Storage = {
         const profile = this.getProfile();
         const now = Date.now();
 
+        if (!profile) return [];
+        profile.activeBoosters = Array.isArray(profile.activeBoosters) ? profile.activeBoosters : [];
+
         profile.activeBoosters = profile.activeBoosters.filter(booster => {
             return booster.expiresAt > now;
         });
@@ -734,7 +737,10 @@ const Storage = {
      */
     activateBooster(type, durationMinutes) {
         const profile = this.getProfile();
+        if (!profile) return null;
+
         const expiresAt = Date.now() + (durationMinutes * 60 * 1000);
+        profile.activeBoosters = Array.isArray(profile.activeBoosters) ? profile.activeBoosters : [];
 
         profile.activeBoosters.push({
             type,

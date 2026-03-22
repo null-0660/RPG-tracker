@@ -75,31 +75,33 @@ const Profile = {
      * Обновление характеристик
      */
     updateStats(stats) {
-        const total = stats.intellect + stats.strength + stats.creative + stats.luck || 1;
+        if (!stats) return;
+        
+        const total = (stats.intellect || 0) + (stats.strength || 0) + (stats.creative || 0) + (stats.luck || 0) || 1;
 
         // Интеллект
         const intellectEl = document.getElementById('stat-intellect');
         const intellectFill = document.getElementById('stat-intellect-fill');
-        if (intellectEl) intellectEl.textContent = stats.intellect;
-        if (intellectFill) intellectFill.style.width = `${(stats.intellect / total) * 100}%`;
+        if (intellectEl) intellectEl.textContent = stats.intellect || 0;
+        if (intellectFill) intellectFill.style.width = `${((stats.intellect || 0) / total) * 100}%`;
 
         // Сила
         const strengthEl = document.getElementById('stat-strength');
         const strengthFill = document.getElementById('stat-strength-fill');
-        if (strengthEl) strengthEl.textContent = stats.strength;
-        if (strengthFill) strengthFill.style.width = `${(stats.strength / total) * 100}%`;
+        if (strengthEl) strengthEl.textContent = stats.strength || 0;
+        if (strengthFill) strengthFill.style.width = `${((stats.strength || 0) / total) * 100}%`;
 
         // Креатив
         const creativeEl = document.getElementById('stat-creative');
         const creativeFill = document.getElementById('stat-creative-fill');
-        if (creativeEl) creativeEl.textContent = stats.creative;
-        if (creativeFill) creativeFill.style.width = `${(stats.creative / total) * 100}%`;
+        if (creativeEl) creativeEl.textContent = stats.creative || 0;
+        if (creativeFill) creativeFill.style.width = `${((stats.creative || 0) / total) * 100}%`;
 
         // Удача
         const luckEl = document.getElementById('stat-luck');
         const luckFill = document.getElementById('stat-luck-fill');
-        if (luckEl) luckEl.textContent = stats.luck;
-        if (luckFill) luckFill.style.width = `${(stats.luck / total) * 100}%`;
+        if (luckEl) luckEl.textContent = stats.luck || 0;
+        if (luckFill) luckFill.style.width = `${((stats.luck || 0) / total) * 100}%`;
     },
 
     /**

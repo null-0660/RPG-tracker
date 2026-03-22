@@ -266,8 +266,8 @@ const Modal = {
         if (confirmCompleteBtn) {
             confirmCompleteBtn.addEventListener('click', () => {
                 this.closeCompleteModal();
-                if (this.currentTaskId) {
-                    App.finalizeTaskCompletion(this.currentTaskId);
+                if (App.currentCompletingTask) {
+                    App.finalizeTaskCompletion(App.currentCompletingTask);
                 }
             });
         }
@@ -305,10 +305,10 @@ const Modal = {
                 App.showNotification('Задача обновлена!', 'success');
 
                 // Обновляем UI
-                if (Deck.getCurrentFilter() === 'all' || Deck.getCurrentFilter() === formData.type) {
-                    Deck.updateCard(this.currentTaskId, updatedTask);
-                }
+                Deck.render(Deck.currentFilter, Deck.currentSort);
                 Dashboard.renderActiveTasks();
+                Profile.render();
+                Leaderboard.refresh();
             }
         } else {
             // Создание новой
@@ -328,8 +328,10 @@ const Modal = {
             }
 
             // Обновляем UI
-            Deck.addCard(newTask);
+            Deck.render(Deck.currentFilter, Deck.currentSort);
             Dashboard.renderActiveTasks();
+            Profile.render();
+            Leaderboard.refresh();
         }
 
         this.closeTaskModal();

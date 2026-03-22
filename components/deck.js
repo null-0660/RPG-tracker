@@ -191,42 +191,21 @@ const Deck = {
      * Обновить карточку
      */
     updateCard(taskId, task) {
-        const card = document.querySelector(`[data-id="${taskId}"]`);
-        if (card) {
-            const newCard = Card.create(task, false);
-            card.replaceWith(newCard);
-        }
-        this.updateDeckStats();
+        this.render(this.currentFilter, this.currentSort);
     },
 
     /**
      * Добавить карточку
      */
     addCard(task) {
-        const container = document.getElementById('deck-list');
-        if (container) {
-            const card = Card.create(task, false);
-            if (this.currentFilter === 'all' || this.currentFilter === task.type) {
-                container.insertBefore(card, container.firstChild);
-            }
-        }
-        this.updateDeckStats();
+        this.render(this.currentFilter, this.currentSort);
     },
 
     /**
      * Удалить карточку
      */
     removeCard(taskId) {
-        const card = document.querySelector(`[data-id="${taskId}"]`);
-        if (card) {
-            card.remove();
-            // Проверка на пустоту
-            const container = document.getElementById('deck-list');
-            if (container && container.children.length === 0) {
-                this.render(this.currentFilter, this.currentSort);
-            }
-        }
-        this.updateDeckStats();
+        this.render(this.currentFilter, this.currentSort);
     },
 
     /**

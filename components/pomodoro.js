@@ -233,17 +233,24 @@ const Pomodoro = {
     start() {
         if (this.state.isRunning && !this.state.isPaused) return;
 
+        // Проверка выбранной задачи
+        if (this.state.mode === 'work' && !this.state.currentTaskId) {
+            App.showNotification('📋 Выберите задачу для работы!', 'warning');
+            return;
+        }
+
         this.state.isRunning = true;
         this.state.isPaused = false;
 
         this.state.timerInterval = setInterval(() => {
-            this.state.timeLeft--;
+            if (this.state.timeLeft > 0) {
+                this.state.timeLeft--;
+                this.updateDisplay();
+            }
 
             if (this.state.timeLeft <= 0) {
                 this.completeSession();
             }
-
-            this.updateDisplay();
         }, 1000);
 
         this.render();
@@ -273,6 +280,10 @@ const Pomodoro = {
         }
         
         this.render();
+        Dashboard.render();
+        Profile.render();
+        Leaderboard.refresh();
+        Achievements.checkAndUpdate(Storage.getProfile());
     },
 
     /**
@@ -299,12 +310,10 @@ const Pomodoro = {
             this.saveState();
 
             // Награда XP
-            const profile = Storage.getProfile();
-            if (profile) {
-                profile.totalXp += 10;
-                profile.xp += 10;
-                Storage.saveProfile(profile);
-            }
+            Profile.addXp(10);
+
+            // Обновляем статистику Pomodoro как часть общей активности
+            this.updateTaskProgressAfterSession();
 
             // Проверка на длинный перерыв
             if (this.state.sessionsCompleted >= this.config.sessionsBeforeLongBreak) {
@@ -368,7 +377,19 @@ const Pomodoro = {
      * Выбор задачи
      */
     selectTask(taskId) {
-        this.state.currentTaskId = taskId;
+        this.state.currentTaskId = taskId || null;
+    },
+
+    /**
+     * Обновить связанную статистику после рабочей сессии
+     */
+    updateTaskProgressAfterSession() {
+        if (typeof Statistics !== 'undefined') {
+            Statistics.updateDailyStats(new Date().toDateString(), {
+                timeSpent: 25,
+                xpEarned: 10
+            });
+        }
     },
 
     /**

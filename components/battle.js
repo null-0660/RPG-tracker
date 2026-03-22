@@ -77,16 +77,18 @@ const Battle = {
 
         // Выбираем случайного монстра из списка
         const randomMonster = this.getRandomMonsterForDifficulty(difficulty);
-        
+
         // Обновляем UI
         document.querySelectorAll('.difficulty-btn').forEach(btn => {
             btn.classList.toggle('selected', btn.dataset.difficulty === difficulty);
         });
 
         // Инициализация состояния
+        this.state.active = true;
         this.state.difficulty = difficulty;
         this.state.enemy = {
             ...config,
+            difficulty,
             enemyName: randomMonster.name,
             enemyAvatar: randomMonster.avatar
         };
@@ -96,16 +98,26 @@ const Battle = {
         this.state.selectedTasks = [];
 
         // Обновляем UI врага
-        document.getElementById('enemy-avatar').textContent = randomMonster.avatar;
-        document.getElementById('enemy-name').textContent = randomMonster.name;
-        document.getElementById('enemy-hp').textContent = config.enemyHp;
-        document.getElementById('enemy-max-hp').textContent = config.enemyHp;
-        document.getElementById('enemy-hp-fill').style.width = '100%';
+        const enemyAvatarEl = document.getElementById('enemy-avatar');
+        const enemyNameEl = document.getElementById('enemy-name');
+        const enemyHpEl = document.getElementById('enemy-hp');
+        const enemyMaxHpEl = document.getElementById('enemy-max-hp');
+        const enemyHpFillEl = document.getElementById('enemy-hp-fill');
+        
+        if (enemyAvatarEl) enemyAvatarEl.textContent = randomMonster.avatar;
+        if (enemyNameEl) enemyNameEl.textContent = randomMonster.name;
+        if (enemyHpEl) enemyHpEl.textContent = config.enemyHp;
+        if (enemyMaxHpEl) enemyMaxHpEl.textContent = config.enemyHp;
+        if (enemyHpFillEl) enemyHpFillEl.style.width = '100%';
 
         // Показываем сцену боя
-        document.getElementById('battle-difficulty').style.display = 'none';
-        document.getElementById('battle-scene').style.display = 'block';
-        document.getElementById('battle-result').style.display = 'none';
+        const difficultyEl = document.getElementById('battle-difficulty');
+        const sceneEl = document.getElementById('battle-scene');
+        const resultEl = document.getElementById('battle-result');
+        
+        if (difficultyEl) difficultyEl.style.display = 'none';
+        if (sceneEl) sceneEl.style.display = 'block';
+        if (resultEl) resultEl.style.display = 'none';
 
         // Загружаем задачи для боя
         this.loadBattleTasks();
@@ -144,44 +156,62 @@ const Battle = {
         const container = document.getElementById('battle-tasks-list');
 
         if (tasks.length === 0) {
-            container.innerHTML = '<p class="empty-state-text">Нет доступных задач. Создайте задачи сначала!</p>';
-            document.getElementById('battle-attack').disabled = true;
+            if (container) {
+                container.innerHTML = '<p class="empty-state-text">Нет доступных задач. Создайте задачи сначала!</p>';
+            }
+            const attackBtn = document.getElementById('battle-attack');
+            const healBtn = document.getElementById('battle-heal');
+            if (attackBtn) attackBtn.disabled = true;
+            if (healBtn) healBtn.disabled = true;
             return;
         }
 
-        container.innerHTML = '';
-        tasks.forEach(task => {
-            const card = Card.createBattleCard(task, false);
-            card.addEventListener('click', () => this.toggleTaskSelection(task, card));
-            container.appendChild(card);
-        });
+        if (container) {
+            container.innerHTML = '';
+            tasks.forEach(task => {
+                const card = Card.createBattleCard(task, false);
+                if (card) {
+                    card.addEventListener('click', () => this.toggleTaskSelection(task, card));
+                    container.appendChild(card);
+                }
+            });
+        }
 
-        document.getElementById('battle-attack').disabled = true;
-        document.getElementById('battle-heal').disabled = true;
+        const attackBtn = document.getElementById('battle-attack');
+        const healBtn = document.getElementById('battle-heal');
+        if (attackBtn) attackBtn.disabled = true;
+        if (healBtn) healBtn.disabled = true;
     },
 
     /**
      * Переключение выбора задачи
      */
     toggleTaskSelection(task, card) {
+        if (!task || !card) return;
+        
         const index = this.state.selectedTasks.findIndex(t => t.id === task.id);
 
         if (index !== -1) {
             // Удалить из выбора
             this.state.selectedTasks.splice(index, 1);
             card.classList.remove('selected');
-            card.querySelector('.battle-task-checkbox').textContent = '';
+            const checkbox = card.querySelector('.battle-task-checkbox');
+            if (checkbox) checkbox.textContent = '';
         } else {
             // Добавить к выбору
             this.state.selectedTasks.push(task);
             card.classList.add('selected');
-            card.querySelector('.battle-task-checkbox').textContent = '✅';
+            const checkbox = card.querySelector('.battle-task-checkbox');
+            if (checkbox) checkbox.textContent = '✅';
         }
 
         // Обновить состояние кнопок
         const hasSelected = this.state.selectedTasks.length > 0;
-        document.getElementById('battle-attack').disabled = !hasSelected;
-        document.getElementById('battle-heal').disabled = !hasSelected;
+        const attackBtn = document.getElementById('battle-attack');
+        const healBtn = document.getElementById('battle-heal');
+        
+        if (attackBtn) attackBtn.disabled = !hasSelected;
+        if (healBtn) healBtn.disabled = !hasSelected;
     },
 
     /**
@@ -195,11 +225,11 @@ const Battle = {
 
         // Считаем урон от выбранных задач
         let totalDamage = this.state.selectedTasks.reduce((sum, task) => sum + task.xp, 0);
-        
+
         // Критический урон от удачи
-        const critChance = Math.min(0.3, profile.stats.luck * 0.01);
+        const critChance = Math.min(0.3, (profile.stats.luck || 0) * 0.01);
         const isCrit = Math.random() < critChance;
-        
+
         if (isCrit) {
             totalDamage = Math.floor(totalDamage * 1.5);
         }
@@ -213,16 +243,24 @@ const Battle = {
 
         // Помечаем задачи как выполненные
         this.state.selectedTasks.forEach(task => {
-            App.completeTask(task.id, true); // true = silent mode
+            if (App.currentCompletingTask !== task.id) {
+                App.finalizeTaskCompletion(task.id);
+            }
         });
 
         this.state.selectedTasks = [];
+        
+        // Обновляем UI карточек
         document.querySelectorAll('.battle-task-item').forEach(card => {
             card.classList.remove('selected');
-            card.querySelector('.battle-task-checkbox').textContent = '';
+            const checkbox = card.querySelector('.battle-task-checkbox');
+            if (checkbox) checkbox.textContent = '';
         });
-        document.getElementById('battle-attack').disabled = true;
-        document.getElementById('battle-heal').disabled = true;
+        
+        const attackBtn = document.getElementById('battle-attack');
+        const healBtn = document.getElementById('battle-heal');
+        if (attackBtn) attackBtn.disabled = true;
+        if (healBtn) healBtn.disabled = true;
 
         // Проверка победы
         if (this.state.enemyHp <= 0) {
@@ -312,7 +350,7 @@ const Battle = {
         // Награды
         const xpMultiplier = Storage.getXpMultiplier();
         const xpReward = Math.floor(config.xpReward * xpMultiplier);
-        const goldMultiplier = profile.activeBoosters.find(b => b.type === 'gold-booster') ? 1.5 : 1;
+        const goldMultiplier = (profile.activeBoosters || []).find(b => b.type === 'gold-booster') ? 1.5 : 1;
         const goldReward = Math.floor(config.goldReward * goldMultiplier);
 
         // Обновляем профиль
@@ -341,7 +379,7 @@ const Battle = {
         document.getElementById('battle-result').style.display = 'block';
         document.getElementById('result-icon').textContent = '🏆';
         document.getElementById('result-title').textContent = 'Победа!';
-        document.getElementById('result-description').textContent = `Вы победили ${config.enemyName}!`;
+        document.getElementById('result-description').textContent = `Вы победили ${this.state.enemy.enemyName}!`;
         document.getElementById('result-xp').textContent = xpReward;
         document.getElementById('result-gold').textContent = goldReward;
 

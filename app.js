@@ -22,19 +22,28 @@ const App = {
             }, 500);
         }
 
+        const safeInit = (name, component) => {
+            try {
+                component?.init?.();
+            } catch (error) {
+                console.error(`Ошибка инициализации ${name}:`, error);
+                this.showNotification(`Ошибка модуля: ${name}`, 'error');
+            }
+        };
+
         // Инициализация компонентов
-        Modal.init();
-        Dashboard.init();
-        Deck.init();
-        Profile.init();
-        Battle.init();
-        Shop.init();
-        Achievements.init();
-        Habits.init();
-        Motivation.init();
-        Statistics.init();
-        Leaderboard.init();
-        Pomodoro.init();
+        safeInit('Modal', Modal);
+        safeInit('Dashboard', Dashboard);
+        safeInit('Deck', Deck);
+        safeInit('Profile', Profile);
+        safeInit('Battle', Battle);
+        safeInit('Shop', Shop);
+        safeInit('Achievements', Achievements);
+        safeInit('Habits', Habits);
+        safeInit('Motivation', Motivation);
+        safeInit('Statistics', Statistics);
+        safeInit('Leaderboard', Leaderboard);
+        safeInit('Pomodoro', Pomodoro);
 
         // Привязка навигации
         this.bindNavigation();
@@ -47,6 +56,16 @@ const App = {
 
         // Добавляем тестовые задачи если их нет
         this.addDemoTasksIfEmpty();
+
+        // Финальная синхронизация UI после инициализации
+        Dashboard.render();
+        Deck.render();
+        Profile.render();
+        Achievements.render();
+        Habits.render();
+        Leaderboard.refresh();
+        Pomodoro.render();
+        Shop.render();
 
         // Обновляем меню
         this.updateMenuUserInfo();
@@ -135,14 +154,18 @@ const App = {
         const mobileMenu = document.getElementById('mobile-menu');
         const overlay = document.getElementById('menu-overlay');
         const menuBtn = document.getElementById('menu-btn');
+        
         if (mobileMenu) mobileMenu.classList.remove('active');
         if (overlay) overlay.classList.remove('active');
-        if (menuBtn) menuBtn.classList.remove('active'); // Убираем анимацию бургера
-        // Возвращаем прокрутку страницы
-        document.body.style.overflow = '';
-        document.body.style.position = '';
-        document.body.style.top = '';
-        document.body.style.width = '';
+        if (menuBtn) menuBtn.classList.remove('active');
+        
+        // Возвращаем прокрутку страницы с задержкой
+        setTimeout(() => {
+            document.body.style.overflow = '';
+            document.body.style.position = '';
+            document.body.style.top = '';
+            document.body.style.width = '';
+        }, 300);
     },
 
     /**
@@ -266,7 +289,7 @@ const App = {
      */
     finalizeTaskCompletion(taskId) {
         const task = Storage.getTask(taskId);
-        if (!task) return;
+        if (!task || task.status === 'done') return;
 
         // Обновляем задачу
         task.status = 'done';
@@ -295,8 +318,10 @@ const App = {
         }
 
         // Обновляем UI
-        Deck.updateCard(taskId, task);
+        Deck.render(Deck.currentFilter, Deck.currentSort);
         Dashboard.updateAfterTaskComplete();
+        Profile.render();
+        Leaderboard.refresh();
 
         // Мотивационное сообщение
         let message = `+${xpResult.xpGained} XP | `;
@@ -347,8 +372,10 @@ const App = {
     deleteTask(taskId) {
         if (confirm('Вы уверены, что хотите удалить эту задачу?')) {
             Storage.deleteTask(taskId);
-            Deck.removeCard(taskId);
+            Deck.render(Deck.currentFilter, Deck.currentSort);
             Dashboard.renderActiveTasks();
+            Profile.render();
+            Leaderboard.refresh();
             this.showNotification('Задача удалена', 'info');
         }
     },
@@ -540,7 +567,15 @@ const App = {
 
 // Запуск приложения после загрузки DOM
 document.addEventListener('DOMContentLoaded', () => {
-    App.init();
+    try {
+        App.init();
+    } catch (error) {
+        console.error('Критическая ошибка запуска приложения:', error);
+        const container = document.getElementById('notifications');
+        if (container) {
+            container.innerHTML = '<div class="notification error"><span>❌</span><span>Ошибка запуска приложения. Откройте консоль браузера.</span></div>';
+        }
+    }
 });
 
 // Обработка онлайн/оффлайн статуса

@@ -96,6 +96,7 @@ const Habits = {
                 }
             ];
             this.saveHabits(this.defaultHabits);
+            this.habits = this.defaultHabits;
         } else {
             this.habits = JSON.parse(habits);
         }
@@ -236,6 +237,17 @@ const Habits = {
                 this.openAddHabitModal();
             });
         }
+
+        // Кнопки удаления (двойной клик на карточке)
+        document.querySelectorAll('.habit-card').forEach(card => {
+            card.addEventListener('contextmenu', (e) => {
+                e.preventDefault();
+                const habitId = card.dataset.id;
+                if (confirm('Удалить эту привычку?')) {
+                    this.deleteHabit(habitId);
+                }
+            });
+        });
     },
 
     /**
@@ -289,9 +301,12 @@ const Habits = {
         this.saveHabits(this.habits);
         this.render();
         Dashboard.render();
+        Profile.render();
 
-        if (!habit.completedToday) {
+        if (habit.completedToday) {
             App.showNotification(`+${habit.xpReward} XP | Привычка выполнена!`, 'success');
+        } else {
+            App.showNotification('Выполнение привычки отменено', 'info');
         }
     },
 
