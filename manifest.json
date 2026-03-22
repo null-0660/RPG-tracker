@@ -1,0 +1,40 @@
+{
+    "name": "LifeRPG - Геймифицированная система управления задачами",
+    "short_name": "LifeRPG",
+    "description": "Преврати свою жизнь в игру! Выполняй задачи, получай XP, повышай уровень и сражайся с монстрами.",
+    "start_url": "/RPG-tracker/index.html",
+    "display": "standalone",
+    "background_color": "#0f172a",
+    "theme_color": "#0f172a",
+    "orientation": "portrait-primary",
+    "scope": "/RPG-tracker/",
+    "icons": [
+        {
+            "src": "/RPG-tracker/icon-192.png",
+            "sizes": "192x192",
+            "type": "image/png",
+            "purpose": "any maskable"
+        },
+        {
+            "src": "/RPG-tracker/icon-512.png",
+            "sizes": "512x512",
+            "type": "image/png",
+            "purpose": "any maskable"
+        }
+    ],
+    "categories": ["productivity", "lifestyle", "utilities", "games"],
+    "lang": "ru",
+    "dir": "ltr",
+    "prefer_related_applications": false,
+    "screenshots": [],
+    "share_target": {
+        "action": "/RPG-tracker/share",
+        "method": "POST",
+        "enctype": "multipart/form-data",
+        "params": {
+            "title": "title",
+            "text": "text",
+            "url": "url"
+        }
+    }
+}

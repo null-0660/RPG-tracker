@@ -1,0 +1,903 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="theme-color" content="#0f172a">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="description" content="LifeRPG - Геймифицированная система управления задачами">
+    <title>LifeRPG - Твоя жизнь в формате игры</title>
+    <link rel="manifest" href="manifest.json">
+    <link rel="stylesheet" href="style.css">
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎮</text></svg>">
+    <link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎮</text></svg>">
+</head>
+<body>
+    <div id="app">
+        <!-- Навигация -->
+        <nav class="navbar">
+            <div class="nav-brand">
+                <span class="logo">🎮</span>
+                <span class="brand-text">LifeRPG</span>
+            </div>
+            
+            <!-- Десктопное меню - все разделы -->
+            <ul class="desktop-menu">
+                <li class="desktop-menu-item active" data-view="dashboard">
+                    <span class="menu-icon">📊</span>
+                    <span>Дашборд</span>
+                </li>
+                <li class="desktop-menu-item" data-view="deck">
+                    <span class="menu-icon">📇</span>
+                    <span>Задачи</span>
+                </li>
+                <li class="desktop-menu-item" data-view="battle">
+                    <span class="menu-icon">⚔️</span>
+                    <span>Бой</span>
+                </li>
+                <li class="desktop-menu-item" data-view="profile">
+                    <span class="menu-icon">👤</span>
+                    <span>Профиль</span>
+                </li>
+                <li class="desktop-menu-item" data-view="achievements">
+                    <span class="menu-icon">🏆</span>
+                    <span>Достижения</span>
+                </li>
+                <li class="desktop-menu-item" data-view="leaderboard">
+                    <span class="menu-icon">🏅</span>
+                    <span>Топ</span>
+                </li>
+                <li class="desktop-menu-item" data-view="habits">
+                    <span class="menu-icon">🌱</span>
+                    <span>Привычки</span>
+                </li>
+                <li class="desktop-menu-item" data-view="pomodoro">
+                    <span class="menu-icon">⏱️</span>
+                    <span>Pomodoro</span>
+                </li>
+                <li class="desktop-menu-item" data-view="shop">
+                    <span class="menu-icon">🏪</span>
+                    <span>Магазин</span>
+                </li>
+            </ul>
+            
+            <div class="nav-level">
+                <span class="level-badge">
+                    <span class="level-icon">⭐</span>
+                    <span id="nav-level">1</span>
+                </span>
+                <div class="xp-bar-mini">
+                    <div id="nav-xp-fill" class="xp-fill" style="width: 0%"></div>
+                </div>
+            </div>
+            <button class="nav-menu-btn" id="menu-btn" aria-label="Меню">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+        </nav>
+
+        <!-- Мобильное меню -->
+        <div class="mobile-menu" id="mobile-menu">
+            <div class="mobile-menu-header">
+                <div class="menu-user-info">
+                    <div class="menu-avatar" id="menu-avatar">👤</div>
+                    <div>
+                        <div class="menu-user-name" id="menu-user-name">Игрок</div>
+                        <div class="menu-user-level">Уровень <span id="menu-level">1</span></div>
+                    </div>
+                </div>
+                <button class="menu-close" id="menu-close" aria-label="Закрыть меню">✕</button>
+            </div>
+            <div class="menu-list-container">
+                <ul class="menu-list">
+                    <li class="menu-item active" data-view="dashboard">
+                        <span class="menu-icon">📊</span>
+                        <span>Дашборд</span>
+                    </li>
+                    <li class="menu-item" data-view="deck">
+                        <span class="menu-icon">📇</span>
+                        <span>Колода задач</span>
+                    </li>
+                    <li class="menu-item" data-view="battle">
+                        <span class="menu-icon">⚔️</span>
+                        <span>Карточный бой</span>
+                    </li>
+                    <li class="menu-item" data-view="profile">
+                        <span class="menu-icon">👤</span>
+                        <span>Профиль</span>
+                    </li>
+                    <li class="menu-item" data-view="achievements">
+                        <span class="menu-icon">🏆</span>
+                        <span>Достижения</span>
+                    </li>
+                    <li class="menu-item" data-view="leaderboard">
+                        <span class="menu-icon">🏅</span>
+                        <span>Топ игроков</span>
+                    </li>
+                    <li class="menu-item" data-view="habits">
+                        <span class="menu-icon">🌱</span>
+                        <span>Привычки</span>
+                    </li>
+                    <li class="menu-item" data-view="pomodoro">
+                        <span class="menu-icon">⏱️</span>
+                        <span>Pomodoro</span>
+                    </li>
+                    <li class="menu-item" data-view="shop">
+                        <span class="menu-icon">🏪</span>
+                        <span>Магазин</span>
+                    </li>
+                </ul>
+            </div>
+            <div class="menu-footer">
+                <p class="menu-version">LifeRPG v2.2</p>
+            </div>
+        </div>
+
+        <!-- Дашборд -->
+        <section id="dashboard-view" class="view active">
+            <div class="dashboard">
+                <div class="dashboard-header">
+                    <h1>🎯 Дашборд</h1>
+                    <p class="subtitle" id="current-date"></p>
+                </div>
+
+                <!-- Приветствие -->
+                <div class="greeting-card" id="greeting-card">
+                    <div class="greeting-text">
+                        <span class="greeting-emoji" id="greeting-emoji">👋</span>
+                        <div>
+                            <span class="greeting-title" id="greeting-title">Привет!</span>
+                            <span class="greeting-subtitle" id="greeting-subtitle">Готов к новым победам?</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Цитата дня -->
+                <div class="daily-quote" id="daily-quote">
+                    <!-- Цитата будет добавлена через JS -->
+                </div>
+
+                <!-- Статистика дня -->
+                <div class="stats-grid">
+                    <div class="stat-card streak">
+                        <div class="stat-icon">🔥</div>
+                        <div class="stat-info">
+                            <span class="stat-value" id="streak-value">0</span>
+                            <span class="stat-label">Дней подряд</span>
+                        </div>
+                    </div>
+                    <div class="stat-card xp">
+                        <div class="stat-icon">✨</div>
+                        <div class="stat-info">
+                            <span class="stat-value" id="xp-today">0</span>
+                            <span class="stat-label">XP сегодня</span>
+                        </div>
+                    </div>
+                    <div class="stat-card tasks">
+                        <div class="stat-icon">✅</div>
+                        <div class="stat-info">
+                            <span class="stat-value" id="tasks-done-today">0</span>
+                            <span class="stat-label">Задач выполнено</span>
+                        </div>
+                    </div>
+                    <div class="stat-card active">
+                        <div class="stat-icon">📋</div>
+                        <div class="stat-info">
+                            <span class="stat-value" id="tasks-active">0</span>
+                            <span class="stat-label">Активных задач</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Прогресс уровня -->
+                <div class="level-progress-card">
+                    <div class="level-header">
+                        <span>Уровень <strong id="level-current">1</strong></span>
+                        <span id="xp-progress-text">0/100 XP</span>
+                    </div>
+                    <div class="xp-bar">
+                        <div id="xp-progress" class="xp-fill" style="width: 0%"></div>
+                    </div>
+                    <p class="level-hint">До следующего уровня: <span id="xp-to-next">100</span> XP</p>
+                </div>
+
+                <!-- Активные задачи -->
+                <div class="active-tasks-section">
+                    <div class="section-header">
+                        <h2>⚡ Активные задачи</h2>
+                        <button class="btn-add" id="add-task-btn" aria-label="Добавить задачу">
+                            <span>+</span>
+                        </button>
+                    </div>
+                    <div id="active-tasks-list" class="tasks-list">
+                        <!-- Задачи будут добавлены через JS -->
+                    </div>
+                </div>
+
+                <!-- Быстрые действия -->
+                <div class="quick-actions">
+                    <h3>🚀 Быстрые действия</h3>
+                    <div class="quick-actions-grid">
+                        <button class="quick-action-btn" data-type="study">
+                            <span class="qa-icon">📚</span>
+                            <span>Учёба</span>
+                        </button>
+                        <button class="quick-action-btn" data-type="sport">
+                            <span class="qa-icon">💪</span>
+                            <span>Спорт</span>
+                        </button>
+                        <button class="quick-action-btn" data-type="creative">
+                            <span class="qa-icon">🎨</span>
+                            <span>Творчество</span>
+                        </button>
+                        <button class="quick-action-btn" data-type="other">
+                            <span class="qa-icon">📝</span>
+                            <span>Другое</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Ежедневный квест -->
+                <div class="daily-quest-card">
+                    <div class="daily-quest-header">
+                        <span class="daily-quest-icon">📜</span>
+                        <div>
+                            <h4>Ежедневный квест</h4>
+                            <p>Выполни 3 задачи сегодня</p>
+                        </div>
+                    </div>
+                    <div class="daily-quest-progress">
+                        <div class="daily-quest-bar">
+                            <div id="daily-quest-fill" class="daily-quest-fill" style="width: 0%"></div>
+                        </div>
+                        <span id="daily-quest-text">0/3</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Колода задач -->
+        <section id="deck-view" class="view">
+            <div class="deck-container">
+                <div class="deck-header">
+                    <h1>📇 Колода задач</h1>
+                    <div class="deck-stats">
+                        <span class="deck-stat">
+                            <span class="deck-stat-value" id="deck-total">0</span>
+                            <span class="deck-stat-label">Всего</span>
+                        </span>
+                        <span class="deck-stat">
+                            <span class="deck-stat-value" id="deck-completed">0</span>
+                            <span class="deck-stat-label">Готово</span>
+                        </span>
+                    </div>
+                    <div class="deck-filters">
+                        <button class="filter-btn active" data-filter="all">Все</button>
+                        <button class="filter-btn" data-filter="study">📚 Учёба</button>
+                        <button class="filter-btn" data-filter="sport">💪 Спорт</button>
+                        <button class="filter-btn" data-filter="creative">🎨 Творчество</button>
+                        <button class="filter-btn" data-filter="other">📝 Другое</button>
+                    </div>
+                    <div class="deck-sort">
+                        <button class="sort-btn active" data-sort="date">📅 Дата</button>
+                        <button class="sort-btn" data-sort="xp">✨ XP</button>
+                        <button class="sort-btn" data-sort="difficulty">⭐ Сложность</button>
+                    </div>
+                </div>
+                <div id="deck-list" class="deck-list">
+                    <!-- Карточки задач -->
+                </div>
+                <button class="fab-add" id="fab-add-task" aria-label="Добавить задачу">
+                    <span>+</span>
+                </button>
+            </div>
+        </section>
+
+        <!-- Карточный бой -->
+        <section id="battle-view" class="view">
+            <div class="battle-container">
+                <div class="battle-header">
+                    <h1>⚔️ Карточный Бой</h1>
+                    <p class="battle-subtitle">Сражайся с монстрами, выполняя задачи!</p>
+                </div>
+
+                <!-- Выбор сложности -->
+                <div class="battle-difficulty" id="battle-difficulty">
+                    <h3>Выберите сложность:</h3>
+                    <div class="difficulty-buttons">
+                        <button class="difficulty-btn" data-difficulty="easy">
+                            <span class="difficulty-icon">🟢</span>
+                            <span class="difficulty-name">Легко</span>
+                            <span class="difficulty-hp">Монстр: 50 HP</span>
+                        </button>
+                        <button class="difficulty-btn" data-difficulty="normal">
+                            <span class="difficulty-icon">🟡</span>
+                            <span class="difficulty-name">Нормально</span>
+                            <span class="difficulty-hp">Монстр: 100 HP</span>
+                        </button>
+                        <button class="difficulty-btn" data-difficulty="hard">
+                            <span class="difficulty-icon">🔴</span>
+                            <span class="difficulty-name">Сложно</span>
+                            <span class="difficulty-hp">Монстр: 200 HP</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Боевая сцена -->
+                <div class="battle-scene" id="battle-scene" style="display: none;">
+                    <!-- Игрок -->
+                    <div class="battle-player">
+                        <div class="battle-avatar">🧙‍♂️</div>
+                        <div class="battle-stats">
+                            <div class="battle-name">Герой</div>
+                            <div class="battle-hp-bar">
+                                <div id="player-hp-fill" class="hp-fill" style="width: 100%"></div>
+                            </div>
+                            <div class="battle-hp-text">
+                                <span id="player-hp">100</span>/<span id="player-max-hp">100</span> HP
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Монстр -->
+                    <div class="battle-enemy">
+                        <div class="battle-enemy-avatar" id="enemy-avatar">👹</div>
+                        <div class="battle-enemy-name" id="enemy-name">Орк</div>
+                        <div class="battle-enemy-hp-bar">
+                            <div id="enemy-hp-fill" class="hp-fill enemy" style="width: 100%"></div>
+                        </div>
+                        <div class="battle-enemy-hp-text">
+                            <span id="enemy-hp">100</span>/<span id="enemy-max-hp">100</span> HP
+                        </div>
+                    </div>
+
+                    <!-- Задачи для атаки -->
+                    <div class="battle-tasks">
+                        <h4>📜 Ваши задачи для атаки:</h4>
+                        <div id="battle-tasks-list" class="battle-tasks-list"></div>
+                    </div>
+
+                    <!-- Кнопки действий -->
+                    <div class="battle-actions">
+                        <button class="battle-action-btn attack" id="battle-attack" disabled>
+                            ⚔️ Атаковать
+                        </button>
+                        <button class="battle-action-btn heal" id="battle-heal" disabled>
+                            💚 Лечиться
+                        </button>
+                        <button class="battle-action-btn flee" id="battle-flee">
+                            🏃 Сбежать
+                        </button>
+                    </div>
+
+                    <!-- Лог боя -->
+                    <div class="battle-log" id="battle-log"></div>
+                </div>
+
+                <!-- Результат боя -->
+                <div class="battle-result" id="battle-result" style="display: none;">
+                    <div class="result-icon" id="result-icon">🏆</div>
+                    <h2 id="result-title">Победа!</h2>
+                    <p id="result-description">Вы победили монстра!</p>
+                    <div class="result-rewards">
+                        <span class="reward-item">✨ +<span id="result-xp">50</span> XP</span>
+                        <span class="reward-item">💰 +<span id="result-gold">10</span> Золота</span>
+                    </div>
+                    <button class="btn-submit" id="battle-continue">Продолжить</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Профиль -->
+        <section id="profile-view" class="view">
+            <div class="profile-container">
+                <div class="profile-header">
+                    <div class="avatar-container">
+                        <div class="avatar" id="user-avatar">👤</div>
+                        <button class="edit-avatar" id="edit-avatar-btn" aria-label="Изменить аватар">✏️</button>
+                    </div>
+                    <h1 id="user-name">Игрок</h1>
+                    <p class="user-level">Уровень <span id="profile-level">1</span></p>
+                    <p class="user-title" id="user-title">Новичок</p>
+                </div>
+
+                <!-- Общая статистика -->
+                <div class="profile-stats">
+                    <div class="stat-box">
+                        <span class="stat-box-value" id="total-xp">0</span>
+                        <span class="stat-box-label">Всего XP</span>
+                    </div>
+                    <div class="stat-box">
+                        <span class="stat-box-value" id="total-tasks">0</span>
+                        <span class="stat-box-label">Задач выполнено</span>
+                    </div>
+                    <div class="stat-box">
+                        <span class="stat-box-value" id="best-streak">0</span>
+                        <span class="stat-box-label">Лучший стрик</span>
+                    </div>
+                    <div class="stat-box">
+                        <span class="stat-box-value" id="total-gold">0</span>
+                        <span class="stat-box-label">💰 Золото</span>
+                    </div>
+                </div>
+
+                <!-- Характеристики -->
+                <div class="stats-section">
+                    <h2>📊 Характеристики</h2>
+                    <div class="character-stats">
+                        <div class="char-stat">
+                            <div class="char-header">
+                                <span class="char-icon">🧠</span>
+                                <span class="char-name">Интеллект</span>
+                                <span class="char-value" id="stat-intellect">0</span>
+                            </div>
+                            <div class="char-bar">
+                                <div class="char-fill" id="stat-intellect-fill" style="width: 0%"></div>
+                            </div>
+                            <p class="char-desc">Влияет на учебные задачи</p>
+                        </div>
+                        <div class="char-stat">
+                            <div class="char-header">
+                                <span class="char-icon">💪</span>
+                                <span class="char-name">Сила</span>
+                                <span class="char-value" id="stat-strength">0</span>
+                            </div>
+                            <div class="char-bar">
+                                <div class="char-fill" id="stat-strength-fill" style="width: 0%"></div>
+                            </div>
+                            <p class="char-desc">Влияет на спортивные задачи</p>
+                        </div>
+                        <div class="char-stat">
+                            <div class="char-header">
+                                <span class="char-icon">🎨</span>
+                                <span class="char-name">Креатив</span>
+                                <span class="char-value" id="stat-creative">0</span>
+                            </div>
+                            <div class="char-bar">
+                                <div class="char-fill" id="stat-creative-fill" style="width: 0%"></div>
+                            </div>
+                            <p class="char-desc">Влияет на творческие задачи</p>
+                        </div>
+                        <div class="char-stat">
+                            <div class="char-header">
+                                <span class="char-icon">🍀</span>
+                                <span class="char-name">Удача</span>
+                                <span class="char-value" id="stat-luck">0</span>
+                            </div>
+                            <div class="char-bar">
+                                <div class="char-fill" id="stat-luck-fill" style="width: 0%"></div>
+                            </div>
+                            <p class="char-desc">Влияет на критический урон и находки</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Инвентарь -->
+                <div class="inventory-section">
+                    <h2>🎒 Инвентарь</h2>
+                    <div id="inventory-list" class="inventory-list">
+                        <div class="empty-state">
+                            <p class="empty-state-text">Инвентарь пуст</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Расширенная статистика -->
+                <div class="statistics-section" id="statistics-section">
+                    <h2>📊 Статистика</h2>
+                    <div id="statistics-list" class="statistics-list">
+                        <!-- Статистика будет добавлена через JS -->
+                    </div>
+                </div>
+
+                <!-- Настройки -->
+                <div class="settings-section">
+                    <h2>⚙️ Настройки</h2>
+                    <div class="settings-list">
+                        <div class="setting-item">
+                            <span>📝 Изменить имя</span>
+                            <button id="edit-name-btn" class="setting-btn">Изменить</button>
+                        </div>
+                        <div class="setting-item">
+                            <span>🔔 Уведомления</span>
+                            <button id="toggle-notifications-btn" class="setting-btn">Вкл</button>
+                        </div>
+                        <div class="setting-item">
+                            <span>💾 Экспорт данных</span>
+                            <button id="export-data-btn" class="setting-btn">Экспорт</button>
+                        </div>
+                        <div class="setting-item">
+                            <span>📥 Импорт данных</span>
+                            <button id="import-data-btn" class="setting-btn">Импорт</button>
+                        </div>
+                        <div class="setting-item">
+                            <span>🗑️ Сбросить прогресс</span>
+                            <button id="reset-progress-btn" class="setting-btn danger">Сбросить</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Достижения -->
+        <section id="achievements-view" class="view">
+            <div class="achievements-container">
+                <h1>🏆 Достижения</h1>
+                <div class="achievements-stats">
+                    <span class="achievements-stat">
+                        <span id="achievements-unlocked">0</span>/<span id="achievements-total">0</span>
+                    </span>
+                    <span class="achievements-label">Разблокировано</span>
+                </div>
+                <div id="achievements-list" class="achievements-list">
+                    <!-- Достижения будут добавлены через JS -->
+                </div>
+            </div>
+        </section>
+
+        <!-- Таблица лидеров -->
+        <section id="leaderboard-view" class="view">
+            <div class="leaderboard-container">
+                <div class="leaderboard-header-section">
+                    <h1>🏅 Таблица Лидеров</h1>
+                    <p class="leaderboard-subtitle">Соревнуйся с другими игроками!</p>
+                </div>
+                <div id="leaderboard-list" class="leaderboard-list-container">
+                    <!-- Таблица лидеров будет добавлена через JS -->
+                </div>
+            </div>
+        </section>
+
+        <!-- Привычки -->
+        <section id="habits-view" class="view">
+            <div class="habits-container">
+                <div class="habits-header-section">
+                    <h1>🌱 Привычки</h1>
+                    <p class="habits-subtitle">Формируй полезные ритуалы каждый день</p>
+                </div>
+                
+                <!-- Статистика привычек -->
+                <div class="habits-stats-grid">
+                    <div class="habits-stat-card">
+                        <span class="habits-stat-icon">📋</span>
+                        <span class="habits-stat-value" id="habits-total">0</span>
+                        <span class="habits-stat-label">Всего</span>
+                    </div>
+                    <div class="habits-stat-card">
+                        <span class="habits-stat-icon">✅</span>
+                        <span class="habits-stat-value" id="habits-today">0</span>
+                        <span class="habits-stat-label">Выполнено</span>
+                    </div>
+                    <div class="habits-stat-card">
+                        <span class="habits-stat-icon">🔥</span>
+                        <span class="habits-stat-value" id="habits-streak">0</span>
+                        <span class="habits-stat-label">Серия</span>
+                    </div>
+                    <div class="habits-stat-card">
+                        <span class="habits-stat-icon">📈</span>
+                        <span class="habits-stat-value" id="habits-rate">0%</span>
+                        <span class="habits-stat-label">Прогресс</span>
+                    </div>
+                </div>
+                
+                <div id="habits-list" class="habits-list">
+                    <!-- Привычки будут добавлены через JS -->
+                </div>
+            </div>
+        </section>
+
+        <!-- Pomodoro Таймер -->
+        <section id="pomodoro-view" class="view">
+            <div class="pomodoro-view-container">
+                <div class="pomodoro-header-section">
+                    <h1>⏱️ Pomodoro Таймер</h1>
+                    <p class="pomodoro-subtitle">Фокусируйся на задачах эффективно (25 мин + 5 мин отдых)</p>
+                </div>
+                <div id="pomodoro-timer" class="pomodoro-timer-container">
+                    <!-- Таймер будет добавлен через JS -->
+                </div>
+            </div>
+        </section>
+
+        <!-- Магазин -->
+        <section id="shop-view" class="view">
+            <div class="shop-container">
+                <div class="shop-header">
+                    <h1>🏪 Магазин</h1>
+                    <div class="shop-gold">
+                        <span>💰</span>
+                        <span id="shop-gold-count">0</span>
+                    </div>
+                </div>
+
+                <div class="shop-tabs">
+                    <button class="shop-tab active" data-tab="potions">💚 Зелья</button>
+                    <button class="shop-tab" data-tab="boosters">⚡ Бустеры</button>
+                    <button class="shop-tab" data-tab="skins">🎨 Скины</button>
+                </div>
+
+                <div class="shop-content">
+                    <!-- Зелья -->
+                    <div class="shop-category active" data-category="potions">
+                        <div class="shop-item" data-item="health-potion">
+                            <div class="shop-item-icon">💚</div>
+                            <div class="shop-item-info">
+                                <h4>Зелье лечения</h4>
+                                <p>Восстанавливает 50 HP в бою</p>
+                                <span class="shop-item-price">💰 20</span>
+                            </div>
+                            <button class="shop-item-btn">Купить</button>
+                        </div>
+                        <div class="shop-item" data-item="mana-potion">
+                            <div class="shop-item-icon">💙</div>
+                            <div class="shop-item-info">
+                                <h4>Зелье маны</h4>
+                                <p>+20% к XP на 1 час</p>
+                                <span class="shop-item-price">💰 30</span>
+                            </div>
+                            <button class="shop-item-btn">Купить</button>
+                        </div>
+                        <div class="shop-item" data-item="strength-potion">
+                            <div class="shop-item-icon">💪</div>
+                            <div class="shop-item-info">
+                                <h4>Зелье силы</h4>
+                                <p>+50% урона в бою на 30 мин</p>
+                                <span class="shop-item-price">💰 25</span>
+                            </div>
+                            <button class="shop-item-btn">Купить</button>
+                        </div>
+                    </div>
+
+                    <!-- Бустеры -->
+                    <div class="shop-category" data-category="boosters">
+                        <div class="shop-item" data-item="xp-booster">
+                            <div class="shop-item-icon">✨</div>
+                            <div class="shop-item-info">
+                                <h4>Бустер XP</h4>
+                                <p>+50% к XP на 1 час</p>
+                                <span class="shop-item-price">💰 50</span>
+                            </div>
+                            <button class="shop-item-btn">Купить</button>
+                        </div>
+                        <div class="shop-item" data-item="gold-booster">
+                            <div class="shop-item-icon">💰</div>
+                            <div class="shop-item-info">
+                                <h4>Бустер золота</h4>
+                                <p>+50% золота в боях на 1 час</p>
+                                <span class="shop-item-price">💰 40</span>
+                            </div>
+                            <button class="shop-item-btn">Купить</button>
+                        </div>
+                    </div>
+
+                    <!-- Скины -->
+                    <div class="shop-category" data-category="skins">
+                        <div class="shop-item" data-item="skin-warrior">
+                            <div class="shop-item-icon">⚔️</div>
+                            <div class="shop-item-info">
+                                <h4>Скин: Воин</h4>
+                                <p>Аватар воина</p>
+                                <span class="shop-item-price">💰 100</span>
+                            </div>
+                            <button class="shop-item-btn">Купить</button>
+                        </div>
+                        <div class="shop-item" data-item="skin-mage">
+                            <div class="shop-item-icon">🧙</div>
+                            <div class="shop-item-info">
+                                <h4>Скин: Маг</h4>
+                                <p>Аватар мага</p>
+                                <span class="shop-item-price">💰 100</span>
+                            </div>
+                            <button class="shop-item-btn">Купить</button>
+                        </div>
+                        <div class="shop-item" data-item="skin-ninja">
+                            <div class="shop-item-icon">🥷</div>
+                            <div class="shop-item-info">
+                                <h4>Скин: Ниндзя</h4>
+                                <p>Аватар ниндзя</p>
+                                <span class="shop-item-price">💰 150</span>
+                            </div>
+                            <button class="shop-item-btn">Купить</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Модальное окно создания/редактирования задачи -->
+        <div class="modal-overlay" id="task-modal">
+            <div class="modal">
+                <div class="modal-header">
+                    <h2 id="modal-title">Новая задача</h2>
+                    <button class="modal-close" id="modal-close" aria-label="Закрыть">✕</button>
+                </div>
+                <form id="task-form">
+                    <input type="hidden" id="task-id">
+                    
+                    <div class="form-group">
+                        <label for="task-title">Название *</label>
+                        <input type="text" id="task-title" required placeholder="Например: Решить 5 задач">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="task-description">Описание</label>
+                        <textarea id="task-description" placeholder="Подробности задачи..."></textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="task-purpose">Зачем? (цель)</label>
+                        <input type="text" id="task-purpose" placeholder="Зачем это делать?">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="task-benefit">Польза</label>
+                        <input type="text" id="task-benefit" placeholder="Что это даст?">
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="task-type">Категория</label>
+                            <select id="task-type">
+                                <option value="study">📚 Учёба</option>
+                                <option value="sport">💪 Спорт</option>
+                                <option value="creative">🎨 Творчество</option>
+                                <option value="other">📝 Другое</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="task-difficulty">Сложность</label>
+                            <select id="task-difficulty">
+                                <option value="1">1 - Очень легко</option>
+                                <option value="2">2 - Легко</option>
+                                <option value="3" selected>3 - Средне</option>
+                                <option value="4">4 - Сложно</option>
+                                <option value="5">5 - Очень сложно</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="task-duration">Время (мин)</label>
+                            <input type="number" id="task-duration" min="5" value="30" placeholder="30">
+                        </div>
+                        <div class="form-group">
+                            <label for="task-xp">XP награда</label>
+                            <input type="number" id="task-xp" min="10" value="20" placeholder="20">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Подзадачи</label>
+                        <div id="subtasks-list" class="subtasks-list"></div>
+                        <button type="button" class="btn-add-subtask" id="add-subtask-btn">+ Добавить подзадачу</button>
+                    </div>
+
+                    <div class="modal-actions">
+                        <button type="button" class="btn-cancel" id="btn-cancel">Отмена</button>
+                        <button type="submit" class="btn-submit">Сохранить</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- Модальное окно выполнения задачи -->
+        <div class="modal-overlay" id="complete-modal">
+            <div class="modal complete-modal">
+                <div class="modal-header">
+                    <h2>🎉 Задача выполнена!</h2>
+                    <button class="modal-close" id="complete-modal-close" aria-label="Закрыть">✕</button>
+                </div>
+                <div class="complete-content">
+                    <div class="xp-gain-animation">
+                        <span class="xp-gain-text">+<span id="xp-gain">0</span> XP</span>
+                    </div>
+                    <p class="complete-task-title" id="complete-task-title"></p>
+                    <div class="stat-gains" id="stat-gains"></div>
+                    ${window.activeBooster ? '<div class="booster-active">⚡ Бустер активен!</div>' : ''}
+                </div>
+                <button class="btn-submit" id="btn-confirm-complete">Отлично!</button>
+            </div>
+        </div>
+
+        <!-- Модальное окно использования предмета -->
+        <div class="modal-overlay" id="use-item-modal">
+            <div class="modal">
+                <div class="modal-header">
+                    <h2>Использовать предмет</h2>
+                    <button class="modal-close" id="use-item-modal-close" aria-label="Закрыть">✕</button>
+                </div>
+                <div class="use-item-content" id="use-item-content">
+                    <!-- Содержимое через JS -->
+                </div>
+            </div>
+        </div>
+
+        <!-- Модальное окно добавления привычки -->
+        <div class="modal-overlay" id="habit-modal">
+            <div class="modal">
+                <div class="modal-header">
+                    <h2>🌱 Новая привычка</h2>
+                    <button class="modal-close" id="habit-modal-close" aria-label="Закрыть">✕</button>
+                </div>
+                <form id="habit-form">
+                    <div class="form-group">
+                        <label for="habit-title">Название *</label>
+                        <input type="text" id="habit-title" name="habit-title" required placeholder="Например: Читать 20 минут">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="habit-description">Описание</label>
+                        <textarea id="habit-description" name="habit-description" placeholder="Подробности привычки..."></textarea>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="habit-category">Категория</label>
+                            <select id="habit-category" name="habit-category">
+                                <option value="health">💚 Здоровье</option>
+                                <option value="sport">💪 Спорт</option>
+                                <option value="study">📚 Учёба</option>
+                                <option value="creative">🎨 Творчество</option>
+                                <option value="other">📝 Другое</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="habit-priority">Приоритет</label>
+                            <select id="habit-priority" name="habit-priority">
+                                <option value="high">🔴 Высокий</option>
+                                <option value="medium" selected>🟡 Средний</option>
+                                <option value="low">🟢 Низкий</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="habit-xp">XP награда</label>
+                        <input type="number" id="habit-xp" name="habit-xp" min="5" max="100" value="15" placeholder="15">
+                    </div>
+
+                    <div class="modal-actions">
+                        <button type="button" class="btn-cancel" onclick="document.getElementById('habit-modal').classList.remove('active')">Отмена</button>
+                        <button type="submit" class="btn-submit">Создать</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- Уведомления -->
+        <div class="notifications" id="notifications"></div>
+
+        <!-- Скрытый input для импорта -->
+        <input type="file" id="import-file" accept=".json" style="display: none;">
+    </div>
+
+    <!-- Скрипты -->
+    <script src="storage/storage.js"></script>
+    <script src="components/card.js"></script>
+    <script src="components/deck.js"></script>
+    <script src="components/profile.js"></script>
+    <script src="components/battle.js"></script>
+    <script src="components/shop.js"></script>
+    <script src="components/habits.js"></script>
+    <script src="components/motivation.js"></script>
+    <script src="components/statistics.js"></script>
+    <script src="components/leaderboard.js"></script>
+    <script src="components/pomodoro.js"></script>
+    <script src="ui/modal.js"></script>
+    <script src="ui/dashboard.js"></script>
+    <script src="ui/achievements.js"></script>
+    <script src="app.js"></script>
+
+    <script>
+        // Регистрация Service Worker только для http/https
+        if ('serviceWorker' in navigator && (location.protocol === 'https:' || location.hostname === 'localhost' || location.hostname === '127.0.0.1')) {
+            navigator.serviceWorker.register('service-worker.js')
+                .then(() => console.log('✅ Service Worker зарегистрирован'))
+                .catch(err => console.warn('⚠️ Service Worker:', err));
+        }
+    </script>
+</body>
+</html>
