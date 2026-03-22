@@ -3,7 +3,7 @@
  * Обеспечивает работу приложения оффлайн
  */
 
-const CACHE_NAME = 'liferpg-v1';
+const CACHE_NAME = 'liferpg-v2.3';
 const ASSETS_TO_CACHE = [
     '/RPG-tracker/',
     '/RPG-tracker/index.html',
@@ -16,6 +16,13 @@ const ASSETS_TO_CACHE = [
     '/RPG-tracker/components/card.js',
     '/RPG-tracker/components/deck.js',
     '/RPG-tracker/components/profile.js',
+    '/RPG-tracker/components/battle.js',
+    '/RPG-tracker/components/shop.js',
+    '/RPG-tracker/components/habits.js',
+    '/RPG-tracker/components/motivation.js',
+    '/RPG-tracker/components/statistics.js',
+    '/RPG-tracker/components/leaderboard.js',
+    '/RPG-tracker/components/pomodoro.js',
     '/RPG-tracker/ui/modal.js',
     '/RPG-tracker/ui/dashboard.js',
     '/RPG-tracker/ui/achievements.js'

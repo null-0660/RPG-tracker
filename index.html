@@ -9,7 +9,7 @@
     <meta name="description" content="LifeRPG - Геймифицированная система управления задачами">
     <title>LifeRPG - Твоя жизнь в формате игры</title>
     <link rel="manifest" href="manifest.json">
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="style.css?v=2.3">
     <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎮</text></svg>">
     <link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎮</text></svg>">
 </head>
@@ -879,26 +879,26 @@
     </div>
 
     <!-- Скрипты -->
-    <script src="storage/storage.js"></script>
-    <script src="components/card.js"></script>
-    <script src="components/deck.js"></script>
-    <script src="components/profile.js"></script>
-    <script src="components/battle.js"></script>
-    <script src="components/shop.js"></script>
-    <script src="components/habits.js"></script>
-    <script src="components/motivation.js"></script>
-    <script src="components/statistics.js"></script>
-    <script src="components/leaderboard.js"></script>
-    <script src="components/pomodoro.js"></script>
-    <script src="ui/modal.js"></script>
-    <script src="ui/dashboard.js"></script>
-    <script src="ui/achievements.js"></script>
-    <script src="app.js"></script>
+    <script src="storage/storage.js?v=2.3"></script>
+    <script src="components/card.js?v=2.3"></script>
+    <script src="components/deck.js?v=2.3"></script>
+    <script src="components/profile.js?v=2.3"></script>
+    <script src="components/battle.js?v=2.3"></script>
+    <script src="components/shop.js?v=2.3"></script>
+    <script src="components/habits.js?v=2.3"></script>
+    <script src="components/motivation.js?v=2.3"></script>
+    <script src="components/statistics.js?v=2.3"></script>
+    <script src="components/leaderboard.js?v=2.3"></script>
+    <script src="components/pomodoro.js?v=2.3"></script>
+    <script src="ui/modal.js?v=2.3"></script>
+    <script src="ui/dashboard.js?v=2.3"></script>
+    <script src="ui/achievements.js?v=2.3"></script>
+    <script src="app.js?v=2.3"></script>
 
     <script>
         // Регистрация Service Worker только для http/https
         if ('serviceWorker' in navigator && (location.protocol === 'https:' || location.hostname === 'localhost' || location.hostname === '127.0.0.1')) {
-            navigator.serviceWorker.register('service-worker.js')
+            navigator.serviceWorker.register('service-worker.js?v=2.3')
                 .then(() => console.log('✅ Service Worker зарегистрирован'))
                 .catch(err => console.warn('⚠️ Service Worker:', err));
         }
