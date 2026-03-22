@@ -285,6 +285,42 @@ const Profile = {
                 );
             });
         }
+
+        // Сброс кеша и данных (полный сброс)
+        const clearCacheBtn = document.getElementById('clear-cache-btn');
+        if (clearCacheBtn) {
+            clearCacheBtn.addEventListener('click', () => {
+                if (confirm('⚠️ ВНИМАНИЕ! Это полностью удалит все данные:\n\n• Весь прогресс будет потерян\n• Все задачи и достижения удалятся\n• Кеш приложения очистится\n• Вы будете перенаправлены на чистую версию\n\nПродолжить?')) {
+                    // Очищаем весь localStorage
+                    localStorage.clear();
+                    
+                    // Очищаем sessionStorage
+                    sessionStorage.clear();
+                    
+                    // Очищаем кеш Service Worker
+                    if ('caches' in window) {
+                        caches.keys().then(cacheName => {
+                            caches.delete(cacheName);
+                        });
+                    }
+                    
+                    // Удаляем регистрацию Service Worker
+                    if ('serviceWorker' in navigator) {
+                        navigator.serviceWorker.getRegistrations().then(registrations => {
+                            registrations.forEach(registration => {
+                                registration.unregister();
+                            });
+                        });
+                    }
+                    
+                    // Показываем сообщение
+                    alert('✅ Все данные удалены!\nСейчас страница будет перезагружена...');
+                    
+                    // Перезагружаем страницу с очисткой кеша
+                    window.location.href = window.location.href + '?cleared=' + Date.now();
+                }
+            });
+        }
     },
 
     /**

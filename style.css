@@ -3082,6 +3082,7 @@ body {
     }
 
     .desktop-menu {
+        display: flex;
         gap: 8px;
     }
 

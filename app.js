@@ -11,6 +11,17 @@ const App = {
     init() {
         console.log('🎮 LifeRPG v2.2 запущен!');
 
+        // Проверка на сброс кеша
+        const urlParams = new URLSearchParams(window.location.search);
+        if (urlParams.has('cleared')) {
+            // Очищаем URL от параметра
+            window.history.replaceState({}, document.title, window.location.pathname);
+            // Показываем уведомление после загрузки
+            setTimeout(() => {
+                this.showNotification('🧹 Кеш и данные успешно очищены!', 'success');
+            }, 500);
+        }
+
         // Инициализация компонентов
         Modal.init();
         Dashboard.init();
